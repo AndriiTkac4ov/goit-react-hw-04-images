@@ -4,7 +4,7 @@ import api from '../../services/api';
 import { toast } from 'react-toastify';
 import { Gallery } from "./ImageGallery.styled";
 import { Loader } from "../Loader/Loader";
-import { ImageGalleryItem } from "../ImageGalleryItem/ImageGalleryItem";
+import { ImageGalleryItemByHooks } from "../ImageGalleryItem/ImageGalleryItemByHooks";
 import { Button } from "../Button/Button";
 
 export class ImageGallery extends Component {
@@ -124,7 +124,7 @@ export class ImageGallery extends Component {
                 {images?.length !== 0 &&
                 <Gallery>
                     {images?.map((image) => (
-                        <ImageGalleryItem
+                        <ImageGalleryItemByHooks
                             key={image.id}
                             image={image}
                         />
@@ -138,7 +138,7 @@ export class ImageGallery extends Component {
     }
 }
 
-ImageGalleryItem.propTypes = {
+ImageGalleryItemByHooks.propTypes = {
     image: PropTypes.shape({
         id: PropTypes.number.isRequired,
     }).isRequired
