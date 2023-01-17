@@ -7,7 +7,7 @@ export const ImageGalleryItemByHooks = ({ image: { webformatURL, largeImageURL, 
     const [showModal, setShowModal] = useState(false);
 
     const toggleModal = () => {
-        setShowModal(prevState => (!prevState.showModal));
+        setShowModal(prevState => (!prevState));
     }
 
     return (
