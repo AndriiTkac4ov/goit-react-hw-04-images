@@ -48,6 +48,10 @@ export const ImageGalleryByHooks = ({ queryImages }) => {
         };
             
         const getImages = async () => {
+            if (page === 1) {
+                return;
+            };
+            
             if (page !== 1) {
                 try {
                     setIsLoading(true);
