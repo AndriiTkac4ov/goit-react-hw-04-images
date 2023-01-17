@@ -50,7 +50,6 @@ export const ImageGalleryByHooks = ({ queryImages }) => {
         const getImages = async () => {
             if (page !== 1) {
                 try {
-                
                     setIsLoading(true);
 
                     let imagesFromAPI = await api.fetchImages(queryImages, page);
