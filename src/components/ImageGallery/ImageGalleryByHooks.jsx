@@ -20,21 +20,37 @@ export const ImageGalleryByHooks = ({ queryImages }) => {
             
         const getImages = async () => {
             try {
-                if (page === 1) {
                     setImages([]);
                     setPage(1);
                     setIsLoading(true);
                     
-                    let imagesFromAPI = await api.fetchImages(queryImages, page);
+                    let imagesFromAPI = await api.fetchImages(queryImages);
                     imagesFromAPI = imagesFromAPI.map(image => {
                         return image = {
                             id: image.id, largeImageURL: image.largeImageURL, webformatURL: image.webformatURL, tags: image.tags
                         }
                     });
                     setImages(imagesFromAPI);
-                }
+            } catch (error) {
+                console.log(error);
+                setIsError(true);
+            } finally {
+                setIsLoading(false);
+            }
+        }
 
-                if (page > 1) {
+        getImages();
+    }, [queryImages])
+
+    useEffect(() => {
+        if (!queryImages) {
+            return;
+        };
+            
+        const getImages = async () => {
+            if (page !== 1) {
+                try {
+                
                     setIsLoading(true);
 
                     let imagesFromAPI = await api.fetchImages(queryImages, page);
@@ -46,12 +62,13 @@ export const ImageGalleryByHooks = ({ queryImages }) => {
                     setImages(prevState => (
                         [...prevState, ...imagesFromAPI]
                     ));
+
+                } catch (error) {
+                    console.log(error);
+                    setIsError(true);
+                } finally {
+                    setIsLoading(false);
                 }
-            } catch (error) {
-                console.log(error);
-                setIsError(true);
-            } finally {
-                setIsLoading(false);
             }
         }
 
