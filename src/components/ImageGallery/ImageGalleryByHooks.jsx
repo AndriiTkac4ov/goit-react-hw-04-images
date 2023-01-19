@@ -48,10 +48,6 @@ export const ImageGalleryByHooks = ({ queryImages }) => {
         };
             
         const getImages = async () => {
-            if (page === 1) {
-                return;
-            };
-            
             if (page !== 1) {
                 try {
                     setIsLoading(true);
@@ -76,7 +72,7 @@ export const ImageGalleryByHooks = ({ queryImages }) => {
         }
 
         getImages();
-    }, [queryImages, page])
+    }, [page])
 
     // const catchWrongQuery = () => {
     //     toast.error("There aren't images by this query.", {position: "top-left"})
