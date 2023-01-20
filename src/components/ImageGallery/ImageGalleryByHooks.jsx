@@ -10,27 +10,38 @@ import { Button } from "../Button/Button";
 export const ImageGalleryByHooks = ({ queryImages }) => {
     const [images, setImages] = useState([]);
     const [page, setPage] = useState(1);
+    const [query, setQuery] = useState(queryImages);
     const [isLoading, setIsLoading] = useState(false);
     const [isError, setIsError] = useState(false);
 
     useEffect(() => {
-        if (!queryImages) {
+        setImages([]);
+        setPage(1);
+        setQuery(queryImages);
+    }, [queryImages])
+
+    useEffect(() => {
+        if (!query) {
             return;
         };
-            
+
         const getImages = async () => {
             try {
-                setImages([]);
-                setPage(1);
                 setIsLoading(true);
-                    
-                let imagesFromAPI = await api.fetchImages(queryImages);
+
+                let imagesFromAPI = await api.fetchImages(query, page);
                 imagesFromAPI = imagesFromAPI.map(image => {
                     return image = {
-                        id: image.id, largeImageURL: image.largeImageURL, webformatURL: image.webformatURL, tags: image.tags
+                        id: image.id,
+                        largeImageURL: image.largeImageURL,
+                        webformatURL: image.webformatURL,
+                        tags: image.tags,
                     }
                 });
-                setImages(imagesFromAPI);
+                setImages(prevState => (
+                    [...prevState, ...imagesFromAPI]
+                ));
+
             } catch (error) {
                 console.log(error);
                 setIsError(true);
@@ -40,43 +51,7 @@ export const ImageGalleryByHooks = ({ queryImages }) => {
         }
 
         getImages();
-    }, [queryImages])
-
-    useEffect(() => {
-        if (!queryImages) {
-            return;
-        };
-
-        if (page === 1) {
-            return;
-        }
-
-        const getImages = async () => {
-            if (page !== 1) {
-                try {
-                    setIsLoading(true);
-
-                    let imagesFromAPI = await api.fetchImages(queryImages, page);
-                    imagesFromAPI = imagesFromAPI.map(image => {
-                        return image = {
-                            id: image.id, largeImageURL: image.largeImageURL, webformatURL: image.webformatURL, tags: image.tags
-                        }
-                    });
-                    setImages(prevState => (
-                        [...prevState, ...imagesFromAPI]
-                    ));
-
-                } catch (error) {
-                    console.log(error);
-                    setIsError(true);
-                } finally {
-                    setIsLoading(false);
-                }
-            }
-        }
-
-        getImages();
-    }, [queryImages, page])
+    }, [query, page])
 
     // const catchWrongQuery = () => {
     //     toast.error("There aren't images by this query.", {position: "top-left"})
