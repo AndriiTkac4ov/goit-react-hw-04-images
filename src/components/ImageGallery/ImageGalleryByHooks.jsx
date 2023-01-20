@@ -20,17 +20,17 @@ export const ImageGalleryByHooks = ({ queryImages }) => {
             
         const getImages = async () => {
             try {
-                    setImages([]);
-                    setPage(1);
-                    setIsLoading(true);
+                setImages([]);
+                setPage(1);
+                setIsLoading(true);
                     
-                    let imagesFromAPI = await api.fetchImages(queryImages);
-                    imagesFromAPI = imagesFromAPI.map(image => {
-                        return image = {
-                            id: image.id, largeImageURL: image.largeImageURL, webformatURL: image.webformatURL, tags: image.tags
-                        }
-                    });
-                    setImages(imagesFromAPI);
+                let imagesFromAPI = await api.fetchImages(queryImages);
+                imagesFromAPI = imagesFromAPI.map(image => {
+                    return image = {
+                        id: image.id, largeImageURL: image.largeImageURL, webformatURL: image.webformatURL, tags: image.tags
+                    }
+                });
+                setImages(imagesFromAPI);
             } catch (error) {
                 console.log(error);
                 setIsError(true);
@@ -42,21 +42,21 @@ export const ImageGalleryByHooks = ({ queryImages }) => {
         getImages();
     }, [queryImages])
 
-    const backQueryImages = () => {
-        return queryImages;
-    }
-
     useEffect(() => {
-        if (!backQueryImages()) {
+        if (!queryImages) {
             return;
         };
+
+        if (page === 1) {
+            return;
+        }
 
         const getImages = async () => {
             if (page !== 1) {
                 try {
                     setIsLoading(true);
 
-                    let imagesFromAPI = await api.fetchImages(backQueryImages(), page);
+                    let imagesFromAPI = await api.fetchImages(queryImages, page);
                     imagesFromAPI = imagesFromAPI.map(image => {
                         return image = {
                             id: image.id, largeImageURL: image.largeImageURL, webformatURL: image.webformatURL, tags: image.tags
@@ -76,8 +76,7 @@ export const ImageGalleryByHooks = ({ queryImages }) => {
         }
 
         getImages();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [page])
+    }, [queryImages, page])
 
     // const catchWrongQuery = () => {
     //     toast.error("There aren't images by this query.", {position: "top-left"})
